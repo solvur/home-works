@@ -1,6 +1,8 @@
 from aiogram import types, Dispatcher
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ParseMode
 from config import bot
+from parser.anime import parser
+
 
 # @dp.message_handler(commands=['start'])
 async def start_command(message: types.Message):
@@ -45,7 +47,22 @@ async def send_ph(message: types.Message):
     await message.reply_photo(idphoto123)
 
 
+async def get_animes(message: types.Message):
+    animes = parser()
+    for anime in animes:
+        await message.answer(
+            f"<a href='{anime['link']}'>{anime['title']}</a>\n"
+            f"#Y{anime['year']}\n"
+            f"#{anime['genre']}\n"
+            f"#{anime['country']}\n",
+            reply_markup=InlineKeyboardMarkup().add(
+                InlineKeyboardButton("Cмотреть", url=anime['link'])
+            ),
+            parse_mode=ParseMode.HTML
+        )
+
 def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(start_command, commands=['start'])
     dp.register_message_handler(help_command, commands=['help'])
     dp.register_message_handler(quiz_1, commands=['quiz'])
+    dp.register_message_handler(get_animes, commands=['anime'])
