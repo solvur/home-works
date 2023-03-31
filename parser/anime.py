@@ -1,4 +1,3 @@
-from pprint import pprint
 from bs4 import BeautifulSoup
 import requests
 
@@ -9,9 +8,11 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
 }
 
+
 def get_html(url):
     response = requests.get(url=url, headers=HEADERS)
     return response
+
 
 def get_data_from_hdrezka(html):
     soup = BeautifulSoup(html, 'html.parser')
@@ -20,7 +21,7 @@ def get_data_from_hdrezka(html):
     )
     animes = []
     for card in cards:
-        info = card.find('div', calss_="b-content__inline_item-link").find('div').getText().split(", ")
+        info = card.find('div', class_="b-content__inline_item-link").find('div').getText().split(", ")
         anime = {
             "title": card.find('div', class_="b-content__inline_item-link").find('a').getText(),
             "link": card.find('div', class_="b-content__inline_item-link").find('a').get("href"),
@@ -30,6 +31,7 @@ def get_data_from_hdrezka(html):
         }
         animes.append(anime)
     return animes
+
 
 def parser():
     html = get_html(URL)
@@ -41,3 +43,4 @@ def parser():
             animes.extend(current_page)
     else:
         raise Exception("Error in parser")
+
