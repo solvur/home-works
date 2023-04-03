@@ -1,6 +1,7 @@
 from aiogram import types, Dispatcher
 from config import bot
 from random import random
+from sender import video, audio
 
 
 dice = ['⚽', '🏀', '🎰', '🎯', '🎳', '🎲']
@@ -18,6 +19,22 @@ async def echo(message: types.Message):
 
     if message.text.startswith('!pin'):
         await message.pin()
+
+
+async def send_video(message: types.Message):
+    if "youtube.com" in message.text:
+        await message.answer("Загружаю видео")
+        downloader_video = open(f"../{video(message.text)}", "rb")
+        await message.answer_video(downloader_video)
+        await message.answer("Загрузил!")
+
+
+async def send_audio(message: types.Message):
+    if "youtube.com" in message.text:
+        await message.answer("Загружаю имбовый трек")
+        downloader_audio = open(f"../{audio(message.text)}", "rb")
+        await message.answer_video(downloader_audio)
+        await message.answer("Загрузил!")
 
 
 def register_handlers_extra(dp: Dispatcher):

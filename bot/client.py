@@ -1,7 +1,7 @@
 from aiogram import types, Dispatcher
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ParseMode
 from config import bot
-from parser.anime import parser
+from parserbyemil.anime import parser
 
 
 # @dp.message_handler(commands=['start'])
@@ -61,8 +61,24 @@ async def get_animes(message: types.Message):
             parse_mode=ParseMode.HTML
         )
 
+
+async def get_games(message: types.Message):
+    games = parser()
+    for game in games:
+        await message.answer(
+            f"<a href='{game['link']}</a>\n"
+            f"{['image']}\n"
+            f"#{['price']}\n",
+            reply_markup=InlineKeyboardMarkup().add(
+                InlineKeyboardButton("Игры", url=game['link'])
+            ),
+            parse_mode=ParseMode.HTML
+        )
+
+
 def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(start_command, commands=['start'])
     dp.register_message_handler(help_command, commands=['help'])
     dp.register_message_handler(quiz_1, commands=['quiz'])
     dp.register_message_handler(get_animes, commands=['anime'])
+    dp.register_message_handler(get_games, commands=['games'])
